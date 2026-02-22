@@ -42,7 +42,6 @@ def main():
    # step 1: clean the file
    lines = cleanLine(inputFile)
 
-
    # step 2: create the symbol table
    symbolTable = createSymbolTable(lines)
 
