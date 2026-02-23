@@ -32,7 +32,12 @@ def main():
 
    with open(inputFile, "r") as asm, open(outputFile, "w") as hack:
        for line in asm:
-           hack.write(line)
+           # step 1: clean the file
+           # just removes any comments in the .asm file and then writes to the .hack file 
+           lines = cleanLine(line)
+
+
+           hack.write(lines)
   
    # read the file
    print("The current input is in:", inputFile)
@@ -40,16 +45,16 @@ def main():
 
 
    # step 1: clean the file
-   lines = cleanLine(inputFile)
+   # lines = cleanLine(inputFile)
 
-   # step 2: create the symbol table
-   symbolTable = createSymbolTable(lines)
+#    # step 2: create the symbol table
+#    symbolTable = createSymbolTable(lines)
 
-   # step 3: convert the assembly code to binary machine code 
-   binaryLines = createBinaryLines(lines, symbolTable)
+#    # step 3: convert the assembly code to binary machine code 
+#    binaryLines = createBinaryLines(lines, symbolTable)
 
-   # step 4: write the binary machine code to a .hack file
-   writeToHackFile(binaryLines, outputFile)
+#    # step 4: write the binary machine code to a .hack file
+#    writeToHackFile(binaryLines, outputFile)
 
 
 # -----------------------------
@@ -59,12 +64,23 @@ def main():
 # strip out the empty lines and comments
 def cleanLine(line):
    currentChar = line[0]
+   output = ''
+   print(currentChar)
    if currentChar == '/' or currentChar == '\n':
-       return ''
+    return ''
    elif currentChar == ' ':
-       return cleanLine(line[1:])
+    return cleanLine(line[1:])
    else:
-       return line
+      return line
+
+#    for char in line:
+#     if char == '/' or char == '\n':
+#         output += ''
+#     elif char == ' ':
+#         output += ''
+#     else:
+#         output += char
+#    return output
 
 
 # -----------------------------
