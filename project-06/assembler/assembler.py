@@ -17,32 +17,24 @@ def main():
     outputFile = inputFile.replace(".asm", ".hack")
 
     with open(inputFile, "r") as asm:
-        # turn the OGasm file into a cleaned file without commenst or white spaces
         cleaned = []
         for line in asm:
             newLine = cleanLine(line)
             if newLine != "":
                 cleaned.append(newLine)
 
-    symbolTable = createSymbolTable(cleaned)  # pass 1:
-    binaryLines = createBinaryLines(cleaned, symbolTable)  # pass 2:
+    symbolTable = createSymbolTable(cleaned) 
+    binaryLines = createBinaryLines(cleaned, symbolTable) 
 
     with open(outputFile, "w") as hack:
         for line in binaryLines:
-            hack.write(line + "\n")
+            hack.write("\n".join(binaryLines))
 
     # read the file
     print("The current input is in:", inputFile)
     print("The current output is in:", outputFile)
 
 
-#    # step 2: create the symbol table
-#    symbolTable = createSymbolTable(lines)
-
-
-# -----------------------------
-# step 1: clean the file
-# -----------------------------
 def cleanLine(line):
     # remove comments and in-line comments
     line = line.split("//")[0]
@@ -142,13 +134,6 @@ comp_table = {
 }
 
 
-#    # step 3: convert the assembly code to binary machine code
-#    binaryLines = createBinaryLines(lines, symbolTable)
-
-#    # step 4: write the binary machine code to a .hack file
-#    writeToHackFile(binaryLines, outputFile)
-
-
 def createCInstruction(line):
     destSymbol = ""
     compSymbol = ""
@@ -201,11 +186,6 @@ table = {
 
 
 def createSymbolTable(lines):
-    """
-    we want to create a symbol table that maps the
-    symbols in the assembly code to their corresponding
-    addresses in the machine code.
-    """
     romAddress = 0
     for line in lines:
         if line.startswith("(") and line.endswith(")"):
