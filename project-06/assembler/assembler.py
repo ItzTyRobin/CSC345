@@ -27,8 +27,9 @@ def main():
     binaryLines = createBinaryLines(cleaned, symbolTable) 
 
     with open(outputFile, "w") as hack:
-        for line in binaryLines:
-            hack.write("\n".join(binaryLines))
+        # for line in binaryLines:
+        #     hack.write(line + "\n")
+        hack.write("\n".join(binaryLines))
 
     # read the file
     print("The current input is in:", inputFile)
