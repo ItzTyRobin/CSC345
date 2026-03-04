@@ -8,7 +8,7 @@ def main():
         
     outputFile = inputFile.replace(".vm", ".asm")
     
-    with open(inputFile, "r") as vm:
+    with open(inputFile, "r") as vm: 
         cleaned = []
         for line in vm:
             newLine = cleanLine(line)
@@ -146,6 +146,19 @@ def translateMemoryAccess(action, segment, index):
             pass
 
     elif action == "pop":
+        if segment in ("local", "argument", "this", "that"):
+            base = {
+                "local": "LCL",
+                "argument": "ARG",
+                "this": "THIS",
+                "that": "THAT"
+                }[segment]
+            
+            asm += [
+                f"@{index}",
+                "D=A",
+            ]
+            
         # TODO - implement pop command translation
         pass
 
