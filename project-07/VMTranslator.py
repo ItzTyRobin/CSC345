@@ -1,5 +1,112 @@
 import sys
 
+def translateMemoryAccess(command, segment, index, filename):
+    asm = []
+    
+    segment_map = {
+        "local": "LCL",
+        "argument": "ARG",
+        "this": "THIS",
+        "that": "THAT"
+    }
+    
+    if command == "push":
+        if segment == "constant":
+            asm.append(f"@{index}")
+            asm.append("D=A")
+            asm.append("@SP")
+            asm.append("A=M")
+            asm.append("M=D")
+            asm.append("@SP")
+            asm.append("M=M+1")
+            
+        elif segment in segment_map:
+            asm.append(f"@{index}")
+            asm.append("D=A")
+            asm.append(f"@{segment_map[segment]}")
+            asm.append("A=D+M")
+            asm.append("D=M")
+            asm.append("@SP")
+            asm.append("A=M")
+            asm.append("M=D")
+            asm.append("@SP")
+            asm.append("M=M+1")
+            
+        elif segment == "static":
+            asm.append(f"@{filename}.{index}")
+            asm.append("D=M")
+            asm.append("@SP")
+            asm.append("A=M")
+            asm.append("M=D")
+            asm.append("@SP")
+            asm.append("M=M+1")
+            
+        elif segment == "temp":
+            asm.append(f"@{5 + index}")
+            asm.append("D=M")
+            asm.append("@SP")
+            asm.append("A=M")
+            asm.append("M=D")
+            asm.append("@SP")
+            asm.append("M=M+1")
+            
+        elif segment == "pointer":
+            asm.append(f"@{3 + index}")
+            asm.append("D=M")
+            asm.append("@SP")
+            asm.append("A=M")
+            asm.append("M=D")
+            asm.append("@SP")
+            asm.append("M=M+1")
+    
+    elif command == "pop":
+        if segment in segment_map:
+            asm.append(f"@{index}")
+            asm.append("D=A")
+            asm.append(f"@{segment_map[segment]}")
+            asm.append("A=D+M")
+            asm.append("D=A")
+            asm.append("@R13")
+            asm.append("M=D")
+            asm.append("@SP")
+            asm.append("M=M-1")
+            asm.append("A=M")
+            asm.append("D=M")
+            asm.append("@R13")
+            asm.append("A=M")
+            asm.append("M=D")
+            
+        elif segment == "static":
+            asm.append("@SP")
+            asm.append("M=M-1")
+            asm.append("A=M")
+            asm.append("D=M")
+            asm.append(f"@{filename}.{index}")
+            asm.append("M=D")
+            
+        elif segment == "temp":
+            asm.append("@SP")
+            asm.append("M=M-1")
+            asm.append("A=M")
+            asm.append("D=M")
+            asm.append(f"@{5 + index}")
+            asm.append("M=D")
+            
+        elif segment == "pointer":
+            asm.append("@SP")
+            asm.append("M=M-1")
+            asm.append("A=M")
+            asm.append("D=M")
+            asm.append(f"@{3 + index}")
+            asm.append("M=D")
+    
+    return asm
+
+
+def translateLabel(label_name):
+    return [f"({label_name})"]
+
+
 def main(): 
     if len(sys.argv) > 1:
         inputFile = sys.argv[1]
@@ -8,160 +115,12 @@ def main():
         
     outputFile = inputFile.replace(".vm", ".asm")
     
-    with open(inputFile, "r") as vm: 
-        cleaned = []
-        for line in vm:
-            newLine = cleanLine(line)
-            if newLine != "":
-                cleaned.append(newLine)
-                
-    asmLines = []
-    for line in cleaned:
-        # decide if its an arthemtic command 
-        # (add, sub, neg, eq, gt, lt, and, or, not) or a memory 
-        # access command (push/pop segment index)
-        
-        commandParts = line.split(" ")
-        if len(commandParts) == 1: # -> all arthemtic command lines are only one word
-            op = commandParts[0]
-            asmLines.append(translateArithmetic(op))
-        
-        elif len(commandParts) == 3: # -> all memory access command lines are three words in the form of "action segment index"
-            action = commandParts[0]
-            segment = commandParts[1]
-            index = commandParts[2]
-            asmLines.append(translateMemoryAccess(action, segment, index))
-            
-        else: 
-            print("Error: unrecognized command format:", line)
-            
-
-    with open(outputFile, "w") as asm:
-        asm.write("\n".join(asmLines))
-        
     print("Input file:", inputFile)
     print("Output file:", outputFile)
-            
-def cleanLine(line):
-    # remove comments and in-line comments
-    line = line.split("//")[0]
-
-    # remove whitespace
-    line = line.strip()
-
-    # ignore empty lines
-    if line == "":
-        return ""
-
-    return line
     
-def translateArithmetic(op):
-    # TODO - implement translation of arithmetic commands
-    asm = []
-
-    if op == "add":
-        asm += [
-            "@SP",
-            "AM=M-1",   # SP--, A=SP
-            "D=M",      # D = y
-            "@SP",
-            "AM=M-1",   # SP--, A=SP
-            "M=M+D",    # x = x + y
-            "@SP",
-            "M=M+1"     # SP++
-        ]
-
-    elif op == "sub":
-        asm += [
-            "@SP",
-            "AM=M-1",
-            "D=M",      # D = y
-            "@SP",
-            "AM=M-1",
-            "M=M-D",    # x = x - y
-            "@SP",
-            "M=M+1"
-        ]
-
-    elif op == "neg":
-        asm += [
-            "@SP",
-            "AM=M-1",
-            "M=-M",     # y = -y
-            "@SP",
-            "M=M+1"
-        ]
-
-    elif op == "and":
-        asm += [
-            "@SP",
-            "AM=M-1",
-            "D=M",
-            "@SP",
-            "AM=M-1",
-            "M=M&D",
-            "@SP",
-            "M=M+1"
-        ]
-
-    elif op == "or":
-        asm += [
-            "@SP",
-            "AM=M-1",
-            "D=M",
-            "@SP",
-            "AM=M-1",
-            "M=M|D",
-            "@SP",
-            "M=M+1"
-        ]
-
-    elif op == "not":
-        asm += [
-            "@SP",
-            "AM=M-1",
-            "M=!M",
-            "@SP",
-            "M=M+1"
-        ]
-
-        return "\n".join(asm)
-    
-def translateMemoryAccess(action, segment, index): 
-    # TODO - implement translation of memory access commands (push/pop)
-    asm = []
-    if action == "push":
-        if segment == "constant":
-            asm += [
-                f"@{index}",
-                "D=A",
-                "@SP",
-                "A=M",
-                "M=D",
-                "@SP",
-                "M=M+1"
-            ]
-        else:
-            # TODO - handle other segments (local, argument, this, that, temp, pointer, static)
-            pass
-
-    elif action == "pop":
-        if segment in ("local", "argument", "this", "that"):
-            base = {
-                "local": "LCL",
-                "argument": "ARG",
-                "this": "THIS",
-                "that": "THAT"
-                }[segment]
-            
-            asm += [
-                f"@{index}",
-                "D=A",
-            ]
-            
-        # TODO - implement pop command translation
-        pass
-
-
-
-    
+    with open(inputFile, "r") as vm:
+        lines = vm.readlines()
+        
+    with open(outputFile, "w") as asm:
+        for line in lines:
+            asm.write(line)
