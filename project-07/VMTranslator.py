@@ -107,6 +107,56 @@ def translateLabel(label_name):
     return [f"({label_name})"]
 
 
+def translateArithmetic(command, counter=0):
+    asm = []
+    
+    if command == "add":
+        asm.append("@SP")
+        asm.append("M=M-1")
+        asm.append("A=M")
+        asm.append("D=M")
+        asm.append("@SP")
+        asm.append("M=M-1")
+        asm.append("A=M")
+        asm.append("M=D+M")
+        asm.append("@SP")
+        asm.append("M=M+1")
+        
+    elif command == "sub":
+        asm.append("@SP")
+        asm.append("M=M-1")
+        asm.append("A=M")
+        asm.append("D=M")
+        asm.append("@SP")
+        asm.append("M=M-1")
+        asm.append("A=M")
+        asm.append("M=M-D")
+        asm.append("@SP")
+        asm.append("M=M+1")
+        
+    elif command == "neg":
+        asm.append("@SP")
+        asm.append("M=M-1")
+        asm.append("A=M")
+        asm.append("M=-M")
+        asm.append("@SP")
+        asm.append("M=M+1")
+        
+    elif command == "or":
+        asm.append("@SP")
+        asm.append("M=M-1")
+        asm.append("A=M")
+        asm.append("D=M")
+        asm.append("@SP")
+        asm.append("M=M-1")
+        asm.append("A=M")
+        asm.append("M=D|M")
+        asm.append("@SP")
+        asm.append("M=M+1")
+
+    return asm
+
+
 def main(): 
     if len(sys.argv) > 1:
         inputFile = sys.argv[1]
