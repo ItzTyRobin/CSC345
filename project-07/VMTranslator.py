@@ -247,6 +247,24 @@ def cleanLine(line):
         return ""
 
     return line
+    
+def translateBranching(command, labelName, functionName): 
+    asm = []
+    if command == "label":
+        asm.append(f"({functionName}${labelName})")
+    elif command == "goto":
+        asm.append(f"@{functionName}${labelName}")
+        asm.append("0;JMP")
+    elif command == "if-goto":
+        asm.append("@SP")
+        asm.append("M=M-1")
+        asm.append("A=M")
+        asm.append("D=M")
+        asm.append(f"@{functionName}${labelName}")
+        asm.append("D;JNE")
+        
+    return asm
+                
 
 
 def main(): 
@@ -284,13 +302,18 @@ def main():
             translated = translateMemoryAccess(command, segment, index, fileNameforTranslate)
             asmLines.extend(translated)
             
-        else: 
+        elif wordsInLine[0] in ["add", "sub", "neg", "eq", "gt", "lt", "and", "or", "not"]:
             command = wordsInLine[0]
             translated = translateArithmetic(command, counter)
             asmLines.extend(translated)
              
             if command in ["eq", "gt", "lt"]:
                 counter += 1
+        else: 
+            command = wordsInLine[0]
+            translated = translateBranching(wordsInLine[0], wordsInLine[1], fileNameforTranslate)
+            asmLines.extend(translated)
+            
                 
     with open(outputFile, "w") as asm:
         # for line in asmLines:
