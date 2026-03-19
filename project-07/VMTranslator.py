@@ -256,14 +256,31 @@ def translateBranching(command, labelName, functionName):
         asm.append(f"@{functionName}${labelName}")
         asm.append("0;JMP")
     elif command == "if-goto":
+       ## pop the top of the stack into D,
         asm.append("@SP")
         asm.append("M=M-1")
         asm.append("A=M")
         asm.append("D=M")
         asm.append(f"@{functionName}${labelName}")
-        asm.append("D;JNE")
+        asm.append("D;JNE") ## jump if it's not zero (true) 
         
     return asm
+
+def translateFunction(functionName, howManyTimes):
+    asm = []
+    asm.append(f"({functionName})")
+    for _ in range(howManyTimes):
+        # pushes a 0 onto the stack and increments SP
+        # local 0 ... local howmanytimes-1 should all be initialized to 0
+        asm.append("@SP") # point A to address 256 (where SP lives)
+        asm.append("A=M") # follow the pointer — now A = the current top of stack address
+        asm.append("M=0") # write 0 into that address
+        asm.append("@SP") # point A to SP again
+        asm.append("M=M+1") # increment SP
+    return asm
+
+def translateReturn(functionName):
+    
                 
 
 
@@ -277,6 +294,7 @@ def main():
     
     fileNameSplit = inputFile.split("/")
     fileNameforTranslate = fileNameSplit[-1].replace(".vm", "")
+    currentFunction = fileNameforTranslate
     
     print("Input file:", inputFile)
     print("Output file:", outputFile)
@@ -294,7 +312,13 @@ def main():
     for line in cleaned:
         wordsInLine = line.split() 
         
-        if wordsInLine[0] == "push" or wordsInLine[0] == "pop":
+        if wordsInLine[0] == "function":
+            currentFunction = wordsInLine[1]
+            numTimes = int(wordsInLine[2])
+            translated = translateFunction(currentFunction, numTimes)
+            asmLines.extend(translated) 
+        
+        elif wordsInLine[0] == "push" or wordsInLine[0] == "pop":
             command = wordsInLine[0]
             segment = wordsInLine[1]
             index = int(wordsInLine[2])
@@ -309,12 +333,23 @@ def main():
              
             if command in ["eq", "gt", "lt"]:
                 counter += 1
-        else: 
+                
+        elif wordsInLine[0] in ["label", "goto", "if-goto"]:
             command = wordsInLine[0]
-            translated = translateBranching(wordsInLine[0], wordsInLine[1], fileNameforTranslate)
+            translated = translateBranching(wordsInLine[0], wordsInLine[1], currentFunction)
+            asmLines.extend(translated)
+        
+        elif wordsInLine[0] == "return":
+            translated = translateReturn(currentFunction)
             asmLines.extend(translated)
             
-                
+        ## call 
+        ## initizalize SP = 256 
+        ## call sys.init at the start of every program 
+        ## instead of passing a single .vm file, needs to pass a diractory 
+            ## find alll of the .vm files in the directory and translate them all, putting the asm code into a single .asm file
+        
+
     with open(outputFile, "w") as asm:
         # for line in asmLines:
         #     asm.write(line + "\n")
