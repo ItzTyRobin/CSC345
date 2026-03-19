@@ -280,7 +280,21 @@ def translateFunction(functionName, howManyTimes):
     return asm
 
 def translateReturn(functionName):
-    
+    asm = [] 
+    asm.append(f"({functionName})")
+    # save LCL into R14 so we can return to the correct place after restoring the caller's state
+    asm.append("@LCL")
+    asm.append("D=M")
+    asm.append("@R14")
+    asm.append("M=D")
+    # save the return address (FRAME - 5) into R15 so we can jump to it after restoring the caller's state
+    asm.append("@5")
+    asm.append("D=A")
+    asm.append("@R14")
+    asm.append("A=M-D")
+    asm.append("D=M")
+    asm.append("@R15")
+    asm.append("M=D")
                 
 
 
