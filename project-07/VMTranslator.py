@@ -160,6 +160,8 @@ def translateArithmetic(command, counter):
         asm.append("A=M")
         asm.append("M=-1")
         asm.append(f"(EQ_END{counter})")
+        asm.append("@SP")
+        asm.append("M=M+1")
         
     elif command == "gt": 
         asm.append("@SP")
@@ -182,6 +184,8 @@ def translateArithmetic(command, counter):
         asm.append("A=M")
         asm.append("M=-1")
         asm.append(f"(GT_END{counter})")
+        asm.append("@SP")
+        asm.append("M=M+1")
     
     elif command == "lt":
         asm.append("@SP")
@@ -204,6 +208,8 @@ def translateArithmetic(command, counter):
         asm.append("A=M")
         asm.append("M=-1")
         asm.append(f"(LT_END{counter})")
+        asm.append("@SP")
+        asm.append("M=M+1")
 
     elif command == "and":
         asm.append("@SP")

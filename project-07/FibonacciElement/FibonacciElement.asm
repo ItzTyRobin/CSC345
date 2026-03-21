@@ -89,6 +89,8 @@ A=M
 M=-1
 (LT_END1)
 @SP
+M=M+1
+@SP
 M=M-1
 A=M
 D=M
