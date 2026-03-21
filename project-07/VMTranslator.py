@@ -1,4 +1,5 @@
 import sys
+import os 
 
 def translateMemoryAccess(command, segment, index, filename):
     asm = []
@@ -281,7 +282,7 @@ def translateFunction(functionName, howManyTimes):
 
 def translateReturn(functionName):
     asm = [] 
-    asm.append(f"({functionName})")
+    # asm.append(f"({functionName})")
     # save LCL into R14 so we can return to the correct place after restoring the caller's state
     asm.append("@LCL")
     asm.append("D=M")
@@ -295,78 +296,207 @@ def translateReturn(functionName):
     asm.append("D=M")
     asm.append("@R15")
     asm.append("M=D")
-                
+    # reposition the return value ARG = pop()
+    asm.append("@SP")
+    asm.append("M=M-1")
+    asm.append("A=M")
+    asm.append("D=M")
+    asm.append("@ARG")
+    asm.append("A=M")
+    asm.append("M=D")
+    # restore SP = ARG + 1
+    asm.append("@ARG")
+    asm.append("D=M+1")
+    asm.append("@SP")
+    asm.append("M=D")
+    # restore THAT, THIS, ARG, LCL from the saved frame
+    asm.append("@R14")
+    asm.append("AM=M-1")
+    asm.append("D=M")
+    asm.append("@THAT")
+    asm.append("M=D")
+    asm.append("@R14")
+    asm.append("AM=M-1")
+    asm.append("D=M")
+    asm.append("@THIS")
+    asm.append("M=D")
+    asm.append("@R14")
+    asm.append("AM=M-1")
+    asm.append("D=M")
+    asm.append("@ARG")
+    asm.append("M=D")
+    asm.append("@R14")
+    asm.append("AM=M-1")
+    asm.append("D=M")
+    asm.append("@LCL")
+    asm.append("M=D")
+    # jump to address saved in R15
+    asm.append("@R15")
+    asm.append("A=M")
+    asm.append("0;JMP")
+    return asm
 
+def translateCall(functionName, numArgs, counter):
+    asm = []
+    
+    # Push return address 
+    # it needs to know where to jump back to.
+    # The return address is stored at FRAME-5, it should get popped 
+    returnLabel = f"RETURN_{functionName}_{counter}"
+    asm.append(f"@{returnLabel}")
+    asm.append("D=A")
+    asm.append("@SP")
+    asm.append("A=M")
+    asm.append("M=D")
+    asm.append("@SP")
+    asm.append("M=M+1")
+    
+    # Push LCL / frame 4
+    asm.append("@LCL")
+    asm.append("D=M")
+    asm.append("@SP")
+    asm.append("A=M")
+    asm.append("M=D")
+    asm.append("@SP")
+    asm.append("M=M+1")
+    
+    # Push ARG / frame 3
+    asm.append("@ARG")
+    asm.append("D=M")
+    asm.append("@SP")
+    asm.append("A=M")
+    asm.append("M=D")
+    asm.append("@SP")
+    asm.append("M=M+1")
+    
+    # Push THIS / frame 2
+    asm.append("@THIS")
+    asm.append("D=M")
+    asm.append("@SP")
+    asm.append("A=M")
+    asm.append("M=D")
+    asm.append("@SP")
+    asm.append("M=M+1")
+    
+    # Push THAT / frame 1
+    asm.append("@THAT")
+    asm.append("D=M")
+    asm.append("@SP")
+    asm.append("A=M")
+    asm.append("M=D")
+    asm.append("@SP")
+    asm.append("M=M+1")
+
+    # ARG = SP - numArgs - 5 (return address + 4 saved pointers),
+    asm.append(f"@{numArgs + 5}")
+    asm.append("D=A")
+    asm.append("@SP")
+    asm.append("D=M-D")
+    asm.append("@ARG")
+    asm.append("M=D")
+    # LCL = SP
+    asm.append("@SP")
+    asm.append("D=M")
+    asm.append("@LCL")
+    asm.append("M=D")
+    # Jump to the called function
+    # The function should execute its code and that should be it idk frl
+    asm.append(f"@{functionName}")
+    asm.append("0;JMP")
+    
+    # Return label
+    asm.append(f"({returnLabel})")
+    
+    return asm
 
 def main(): 
     if len(sys.argv) > 1:
         inputFile = sys.argv[1]
     else:
-        inputFile = "SimpleAdd/SimpleAdd.vm"       # default test
-        
-    outputFile = inputFile.replace(".vm", ".asm")
+        inputFile = "SimpleAdd/SimpleAdd.vm"
     
-    fileNameSplit = inputFile.split("/")
-    fileNameforTranslate = fileNameSplit[-1].replace(".vm", "")
-    currentFunction = fileNameforTranslate
-    
-    print("Input file:", inputFile)
-    print("Output file:", outputFile)
-    
-    with open(inputFile, "r") as vm:
-        cleaned = []
-        for line in vm:
-            newLine = cleanLine(line)
-            if newLine != "":
-                cleaned.append(newLine)
-                
     asmLines = []
-    counter = 0 # need this for the eq, gt, lt commands to create unique labels
+    counter = 0
     
-    for line in cleaned:
-        wordsInLine = line.split() 
+    # managing user inputing diractory vs single file
+    if os.path.isdir(inputFile):
+        # directory case
+        asmLines.append("@256")
+        asmLines.append("D=A")
+        asmLines.append("@SP")
+        asmLines.append("M=D")
+        asmLines.extend(translateCall("Sys.init", 0, counter))
+        counter += 1
+        directoryName = inputFile.rstrip("/")
+        outputFile = f"{directoryName}/{os.path.basename(directoryName)}.asm"
+        vmFiles = sorted([f"{directoryName}/{f}" for f in os.listdir(directoryName) if f.endswith(".vm")])
+    else:
+        outputFile = inputFile.replace(".vm", ".asm")
+        vmFiles = [inputFile]
+    
+    for vmFile in vmFiles:
+    
+        fileNameSplit = vmFile.split("/")
+        fileNameforTranslate = fileNameSplit[-1].replace(".vm", "")
+        currentFunction = fileNameforTranslate
         
-        if wordsInLine[0] == "function":
-            currentFunction = wordsInLine[1]
-            numTimes = int(wordsInLine[2])
-            translated = translateFunction(currentFunction, numTimes)
-            asmLines.extend(translated) 
+        print("Input file:", vmFile)
+        print("Output file:", outputFile)
         
-        elif wordsInLine[0] == "push" or wordsInLine[0] == "pop":
-            command = wordsInLine[0]
-            segment = wordsInLine[1]
-            index = int(wordsInLine[2])
+        
+        with open(vmFile, "r") as vm:
+            cleaned = []
+            for line in vm:
+                newLine = cleanLine(line)
+                if newLine != "":
+                    cleaned.append(newLine)
+
+        
+        for line in cleaned:
+            wordsInLine = line.split() 
             
-            translated = translateMemoryAccess(command, segment, index, fileNameforTranslate)
-            asmLines.extend(translated)
+            if wordsInLine[0] == "function":
+                currentFunction = wordsInLine[1]
+                numTimes = int(wordsInLine[2])
+                translated = translateFunction(currentFunction, numTimes)
+                asmLines.extend(translated) 
             
-        elif wordsInLine[0] in ["add", "sub", "neg", "eq", "gt", "lt", "and", "or", "not"]:
-            command = wordsInLine[0]
-            translated = translateArithmetic(command, counter)
-            asmLines.extend(translated)
-             
-            if command in ["eq", "gt", "lt"]:
+            elif wordsInLine[0] == "push" or wordsInLine[0] == "pop":
+                command = wordsInLine[0]
+                segment = wordsInLine[1]
+                index = int(wordsInLine[2])
+                
+                translated = translateMemoryAccess(command, segment, index, fileNameforTranslate)
+                asmLines.extend(translated)
+                
+            elif wordsInLine[0] in ["add", "sub", "neg", "eq", "gt", "lt", "and", "or", "not"]:
+                command = wordsInLine[0]
+                translated = translateArithmetic(command, counter)
+                asmLines.extend(translated)
+                
+                if command in ["eq", "gt", "lt"]:
+                    counter += 1
+                    
+            elif wordsInLine[0] in ["label", "goto", "if-goto"]:
+                command = wordsInLine[0]
+                translated = translateBranching(wordsInLine[0], wordsInLine[1], currentFunction)
+                asmLines.extend(translated)
+            
+            elif wordsInLine[0] == "return":
+                translated = translateReturn(currentFunction)
+                asmLines.extend(translated)
+                
+            elif wordsInLine[0] == "call":
+                functionName = wordsInLine[1]
+                numArgs = int(wordsInLine[2])
+                translated = translateCall(functionName, numArgs, counter)
+                asmLines.extend(translated)
                 counter += 1
                 
-        elif wordsInLine[0] in ["label", "goto", "if-goto"]:
-            command = wordsInLine[0]
-            translated = translateBranching(wordsInLine[0], wordsInLine[1], currentFunction)
-            asmLines.extend(translated)
-        
-        elif wordsInLine[0] == "return":
-            translated = translateReturn(currentFunction)
-            asmLines.extend(translated)
-            
-        ## call 
-        ## initizalize SP = 256 
-        ## call sys.init at the start of every program 
-        ## instead of passing a single .vm file, needs to pass a diractory 
-            ## find alll of the .vm files in the directory and translate them all, putting the asm code into a single .asm file
-        
 
     with open(outputFile, "w") as asm:
         # for line in asmLines:
         #     asm.write(line + "\n")
         asm.write("\n".join(asmLines))
-            
+                
 main()   
