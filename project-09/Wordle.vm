@@ -1,0 +1,1014 @@
+function Wordle.new 0
+    push constant 6
+    call Memory.alloc 1
+    pop pointer 0
+    push constant 172
+    pop static 0
+    push constant 16
+    pop static 1
+    push constant 28
+    pop static 2
+    push constant 32
+    pop static 3
+    push constant 5
+    call Array.new 1
+    pop this 0
+    push constant 0
+    pop this 1
+    push constant 0
+    pop this 2
+    push pointer 0
+    call Wordle.buildWordBank 1
+    pop temp 0
+    push constant 2
+    push this 3
+    add
+    pop pointer 1
+    push that 0
+    pop this 5
+    push pointer 0
+    call Wordle.drawGrid 1
+    pop temp 0
+    push pointer 0
+    call Wordle.printTitle 1
+    pop temp 0
+    push pointer 0
+    call Wordle.clearStatusLine 1
+    pop temp 0
+    push pointer 0
+    return
+function Wordle.buildWordBank 2
+    push argument 0
+    pop pointer 0
+    push constant 8
+    pop local 1
+    push local 1
+    pop this 4
+    push local 1
+    call Array.new 1
+    pop this 3
+    push constant 5
+    call Array.new 1
+    pop local 0
+    push constant 0
+    push local 0
+    add
+    push constant 66
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push local 0
+    add
+    push constant 82
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push local 0
+    add
+    push constant 73
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push local 0
+    add
+    push constant 67
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push local 0
+    add
+    push constant 75
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 0
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    call Array.new 1
+    pop local 0
+    push constant 0
+    push local 0
+    add
+    push constant 67
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push local 0
+    add
+    push constant 82
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push local 0
+    add
+    push constant 65
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push local 0
+    add
+    push constant 78
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push local 0
+    add
+    push constant 69
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    call Array.new 1
+    pop local 0
+    push constant 0
+    push local 0
+    add
+    push constant 70
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push local 0
+    add
+    push constant 76
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push local 0
+    add
+    push constant 65
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push local 0
+    add
+    push constant 77
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push local 0
+    add
+    push constant 69
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    call Array.new 1
+    pop local 0
+    push constant 0
+    push local 0
+    add
+    push constant 71
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push local 0
+    add
+    push constant 72
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push local 0
+    add
+    push constant 79
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push local 0
+    add
+    push constant 83
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push local 0
+    add
+    push constant 84
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    call Array.new 1
+    pop local 0
+    push constant 0
+    push local 0
+    add
+    push constant 80
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push local 0
+    add
+    push constant 76
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push local 0
+    add
+    push constant 65
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push local 0
+    add
+    push constant 78
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push local 0
+    add
+    push constant 84
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    call Array.new 1
+    pop local 0
+    push constant 0
+    push local 0
+    add
+    push constant 81
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push local 0
+    add
+    push constant 85
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push local 0
+    add
+    push constant 69
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push local 0
+    add
+    push constant 69
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push local 0
+    add
+    push constant 78
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    call Array.new 1
+    pop local 0
+    push constant 0
+    push local 0
+    add
+    push constant 83
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push local 0
+    add
+    push constant 84
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push local 0
+    add
+    push constant 79
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push local 0
+    add
+    push constant 82
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push local 0
+    add
+    push constant 77
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 6
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    call Array.new 1
+    pop local 0
+    push constant 0
+    push local 0
+    add
+    push constant 87
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push local 0
+    add
+    push constant 79
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push local 0
+    add
+    push constant 82
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push local 0
+    add
+    push constant 76
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push local 0
+    add
+    push constant 68
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 7
+    push this 3
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 0
+    return
+function Wordle.drawGrid 4
+    push argument 0
+    pop pointer 0
+    call Screen.clearScreen 0
+    pop temp 0
+    push constant 0
+    pop local 0
+label Wordle_0
+    push local 0
+    push constant 6
+    lt
+    not
+    if-goto Wordle_1
+    push constant 0
+    pop local 1
+label Wordle_2
+    push local 1
+    push constant 5
+    lt
+    not
+    if-goto Wordle_3
+    push static 0
+    push local 1
+    push static 3
+    call Math.multiply 2
+    add
+    pop local 2
+    push static 1
+    push local 0
+    push static 3
+    call Math.multiply 2
+    add
+    pop local 3
+    push pointer 0
+    push local 2
+    push local 3
+    push constant 0
+    call Wordle.drawCell 4
+    pop temp 0
+    push local 1
+    push constant 1
+    add
+    pop local 1
+    goto Wordle_2
+label Wordle_3
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Wordle_0
+label Wordle_1
+    push constant 0
+    return
+function Wordle.drawCell 0
+    push argument 0
+    pop pointer 0
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+    push argument 1
+    push argument 2
+    push argument 1
+    push static 2
+    add
+    push argument 2
+    call Screen.drawLine 4
+    pop temp 0
+    push argument 1
+    push static 2
+    add
+    push argument 2
+    push argument 1
+    push static 2
+    add
+    push argument 2
+    push static 2
+    add
+    call Screen.drawLine 4
+    pop temp 0
+    push argument 1
+    push argument 2
+    push static 2
+    add
+    push argument 1
+    push static 2
+    add
+    push argument 2
+    push static 2
+    add
+    call Screen.drawLine 4
+    pop temp 0
+    push argument 1
+    push argument 2
+    push argument 1
+    push argument 2
+    push static 2
+    add
+    call Screen.drawLine 4
+    pop temp 0
+    push argument 3
+    not
+    if-goto Wordle_5
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+    push argument 1
+    push constant 1
+    add
+    push argument 2
+    push constant 1
+    add
+    push argument 1
+    push static 2
+    add
+    push constant 1
+    sub
+    push argument 2
+    push static 2
+    add
+    push constant 1
+    sub
+    call Screen.drawRectangle 4
+    pop temp 0
+    goto Wordle_4
+label Wordle_5
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push argument 1
+    push constant 1
+    add
+    push argument 2
+    push constant 1
+    add
+    push argument 1
+    push static 2
+    add
+    push constant 1
+    sub
+    push argument 2
+    push static 2
+    add
+    push constant 1
+    sub
+    call Screen.drawRectangle 4
+    pop temp 0
+label Wordle_4
+    push constant 0
+    return
+function Wordle.putLetterInCell 2
+    push argument 0
+    pop pointer 0
+    push static 0
+    push argument 2
+    push static 3
+    call Math.multiply 2
+    add
+    push static 2
+    push constant 2
+    call Math.divide 2
+    add
+    push constant 8
+    call Math.divide 2
+    pop local 0
+    push static 1
+    push argument 1
+    push static 3
+    call Math.multiply 2
+    add
+    push static 2
+    push constant 2
+    call Math.divide 2
+    add
+    push constant 11
+    call Math.divide 2
+    pop local 1
+    push local 1
+    push local 0
+    call Output.moveCursor 2
+    pop temp 0
+    push argument 3
+    call Output.printChar 1
+    pop temp 0
+    push constant 0
+    return
+function Wordle.clearCell 2
+    push argument 0
+    pop pointer 0
+    push static 0
+    push argument 2
+    push static 3
+    call Math.multiply 2
+    add
+    pop local 0
+    push static 1
+    push argument 1
+    push static 3
+    call Math.multiply 2
+    add
+    pop local 1
+    push pointer 0
+    push local 0
+    push local 1
+    push constant 0
+    call Wordle.drawCell 4
+    pop temp 0
+    push constant 0
+    return
+function Wordle.printTitle 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    push constant 29
+    call Output.moveCursor 2
+    pop temp 0
+    push constant 6
+    call String.new 1
+    push constant 87
+    call String.appendChar 2
+    push constant 79
+    call String.appendChar 2
+    push constant 82
+    call String.appendChar 2
+    push constant 68
+    call String.appendChar 2
+    push constant 76
+    call String.appendChar 2
+    push constant 69
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+    push constant 0
+    return
+function Wordle.clearStatusLine 1
+    push argument 0
+    pop pointer 0
+    push constant 22
+    push constant 0
+    call Output.moveCursor 2
+    pop temp 0
+    push constant 0
+    pop local 0
+label Wordle_6
+    push local 0
+    push constant 40
+    lt
+    not
+    if-goto Wordle_7
+    push constant 32
+    call Output.printChar 1
+    pop temp 0
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Wordle_6
+label Wordle_7
+    push constant 22
+    push constant 0
+    call Output.moveCursor 2
+    pop temp 0
+    push constant 0
+    return
+function Wordle.run 2
+    push argument 0
+    pop pointer 0
+label Wordle_8
+    push this 2
+    push constant 6
+    lt
+    not
+    if-goto Wordle_9
+    call Keyboard.keyPressed 0
+    pop local 0
+label Wordle_10
+    push local 0
+    push constant 0
+    eq
+    not
+    if-goto Wordle_11
+    call Keyboard.keyPressed 0
+    pop local 0
+    goto Wordle_10
+label Wordle_11
+label Wordle_12
+    call Keyboard.keyPressed 0
+    push constant 0
+    gt
+    not
+    if-goto Wordle_13
+    goto Wordle_12
+label Wordle_13
+    push local 0
+    push constant 129
+    eq
+    not
+    if-goto Wordle_15
+    push this 1
+    push constant 0
+    gt
+    not
+    if-goto Wordle_17
+    push this 1
+    push constant 1
+    sub
+    pop this 1
+    push pointer 0
+    push this 2
+    push this 1
+    call Wordle.clearCell 3
+    pop temp 0
+    push pointer 0
+    call Wordle.clearStatusLine 1
+    pop temp 0
+    goto Wordle_16
+label Wordle_17
+label Wordle_16
+    goto Wordle_14
+label Wordle_15
+label Wordle_14
+    push local 0
+    push constant 128
+    eq
+    not
+    if-goto Wordle_19
+    push this 1
+    push constant 5
+    eq
+    not
+    if-goto Wordle_21
+    push this 2
+    push constant 1
+    add
+    pop this 2
+    push constant 0
+    pop this 1
+    goto Wordle_20
+label Wordle_21
+    push pointer 0
+    call Wordle.clearStatusLine 1
+    pop temp 0
+    push constant 14
+    call String.new 1
+    push constant 78
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 100
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 53
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 108
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+label Wordle_20
+    goto Wordle_18
+label Wordle_19
+label Wordle_18
+    push local 0
+    push constant 64
+    gt
+    push local 0
+    push constant 91
+    lt
+    and
+    not
+    if-goto Wordle_23
+    push this 1
+    push constant 5
+    lt
+    not
+    if-goto Wordle_25
+    push this 1
+    push this 0
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push pointer 0
+    push this 2
+    push this 1
+    push local 0
+    call Wordle.putLetterInCell 4
+    pop temp 0
+    push this 1
+    push constant 1
+    add
+    pop this 1
+    goto Wordle_24
+label Wordle_25
+    push pointer 0
+    call Wordle.clearStatusLine 1
+    pop temp 0
+    push constant 17
+    call String.new 1
+    push constant 65
+    call String.appendChar 2
+    push constant 108
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 100
+    call String.appendChar 2
+    push constant 121
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 53
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 108
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+label Wordle_24
+    goto Wordle_22
+label Wordle_23
+label Wordle_22
+    push this 2
+    push constant 6
+    eq
+    not
+    if-goto Wordle_27
+    push pointer 0
+    call Wordle.clearStatusLine 1
+    pop temp 0
+    push constant 10
+    call String.new 1
+    push constant 87
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 100
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 119
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    push constant 58
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+    push constant 0
+    pop local 1
+label Wordle_28
+    push local 1
+    push constant 5
+    lt
+    not
+    if-goto Wordle_29
+    push local 1
+    push this 5
+    add
+    pop pointer 1
+    push that 0
+    call Output.printChar 1
+    pop temp 0
+    push local 1
+    push constant 1
+    add
+    pop local 1
+    goto Wordle_28
+label Wordle_29
+    goto Wordle_26
+label Wordle_27
+label Wordle_26
+    goto Wordle_8
+label Wordle_9
+    push constant 0
+    return
+function Wordle.dispose 2
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+label Wordle_30
+    push local 0
+    push this 4
+    lt
+    not
+    if-goto Wordle_31
+    push local 0
+    push this 3
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    call Array.dispose 1
+    pop temp 0
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Wordle_30
+label Wordle_31
+    push this 3
+    call Array.dispose 1
+    pop temp 0
+    push this 0
+    call Array.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return

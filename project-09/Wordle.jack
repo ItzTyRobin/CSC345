@@ -1,0 +1,243 @@
+class Wordle {
+
+    // the current guess being typed
+    field Array currentGuess;
+    field int   guessLength;      
+    field int   currentRow;    
+
+    // current word bank 
+    field Array wordBank;
+    field int   wordCount;
+    field Array target; 
+
+    static int gridLength;
+    static int gridHeight;
+    static int cell;  
+    static int spacing; 
+
+    constructor Wordle new() {
+        let gridLength = 172;
+        let gridHeight = 16;
+        let cell = 28;
+        let spacing = 32;
+
+        let currentGuess = Array.new(5);
+        let guessLength = 0;
+        let currentRow = 0;
+
+        do buildWordBank();
+        let target = wordBank[2];  // need to change to pick a random word in word bank 
+
+        do drawGrid();
+        do printTitle();
+        do clearStatusLine();
+
+        return this;
+    }
+
+    method void buildWordBank() {
+        var Array w;
+
+        var int temp;
+        let temp = 8;
+        let wordCount = temp;
+        let wordBank = Array.new(temp);
+
+        // Storing each word as an array of ASCII values (uppercase letters)
+        // brick
+        let w = Array.new(5);   
+        let w[0]=66; let w[1]=82; let w[2]=73; let w[3]=67; let w[4]=75;
+        let wordBank[0] = w;
+
+        // crane
+        let w = Array.new(5);   
+        let w[0]=67; let w[1]=82; let w[2]=65; let w[3]=78; let w[4]=69;
+        let wordBank[1] = w;
+
+        // flame 
+        let w = Array.new(5);  
+        let w[0]=70; let w[1]=76; let w[2]=65; let w[3]=77; let w[4]=69;
+        let wordBank[2] = w;
+
+        // ghost 
+        let w = Array.new(5);  
+        let w[0]=71; let w[1]=72; let w[2]=79; let w[3]=83; let w[4]=84;
+        let wordBank[3] = w;
+
+        // plant 
+        let w = Array.new(5); 
+        let w[0]=80; let w[1]=76; let w[2]=65; let w[3]=78; let w[4]=84;
+        let wordBank[4] = w;
+
+        // queen 
+        let w = Array.new(5); 
+        let w[0]=81; let w[1]=85; let w[2]=69; let w[3]=69; let w[4]=78;
+        let wordBank[5] = w;
+
+        // storm 
+        let w = Array.new(5); 
+        let w[0]=83; let w[1]=84; let w[2]=79; let w[3]=82; let w[4]=77;
+        let wordBank[6] = w;
+
+        // world 
+        let w = Array.new(5);  
+        let w[0]=87; let w[1]=79; let w[2]=82; let w[3]=76; let w[4]=68;
+        let wordBank[7] = w;
+
+        return;
+    }
+
+    method void drawGrid() {
+        var int row;
+        var int col;
+        var int x;
+        var int y;
+
+        do Screen.clearScreen();
+
+        let row = 0;
+        while (row < 6) {
+            let col = 0;
+            while (col < 5) {
+                let x = gridLength + (col * spacing);
+                let y = gridHeight + (row * spacing);
+                do drawCell(x, y, false);
+                let col = col + 1;
+            }
+            let row = row + 1;
+        }
+        return;
+    }
+
+    method void drawCell(int x, int y, boolean filled) {
+        do Screen.setColor(true);
+        do Screen.drawLine(x, y, x+cell, y); 
+        do Screen.drawLine(x+cell, y, x+cell, y+cell);  
+        do Screen.drawLine(x, y+cell, x+cell, y+cell ); 
+        do Screen.drawLine(x, y, x, y+cell );
+
+        if (filled) {
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x+1, y+1, x+cell-1, y+cell-1);
+        } else {
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x+1, y+1, x+cell-1, y+cell-1);
+        }
+        return;
+    }
+
+    method void putLetterInCell(int row, int col, int letter) {
+        var int cx;
+        var int cy;
+
+        let cx = (gridLength + (col * spacing) + (cell / 2)) / 8;
+        let cy = (gridHeight + (row * spacing) + (cell / 2)) / 11;
+        do Output.moveCursor(cy, cx);
+        do Output.printChar(letter);
+        return;
+    }
+
+    method void clearCell(int row, int col) {
+        var int x;
+        var int y;
+        let x = gridLength + (col * spacing);
+        let y = gridHeight + (row * spacing);
+        do drawCell(x, y, false);
+        return;
+    }
+
+    method void printTitle() {
+        do Output.moveCursor(0, 29);
+        do Output.printString("WORDLE");
+        return;
+    }
+
+    method void clearStatusLine() {
+        var int i;
+        do Output.moveCursor(22, 0);
+        let i = 0;
+        while (i < 40) {
+            do Output.printChar(32);
+            let i = i + 1;
+        }
+        do Output.moveCursor(22, 0);
+        return;
+    }
+
+    method void run() {
+        var char key;
+        var int  i;
+
+        while (currentRow < 6) {
+
+            let key = Keyboard.keyPressed();
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+            }
+            // key debounce
+            while (Keyboard.keyPressed() > 0) {}
+
+            // backspace
+            if (key = 129) {
+                if (guessLength > 0) {
+                    let guessLength = guessLength - 1;
+                    do clearCell(currentRow, guessLength);
+                    do clearStatusLine();
+                }
+            }
+
+            // enter
+            if (key = 128) {
+                if (guessLength = 5) {
+                    let currentRow = currentRow + 1;
+                    let guessLength   = 0;
+                } else {
+                    do clearStatusLine();
+                    do Output.printString("Need 5 letters");
+                }
+            }
+
+            // a-z
+            if ((key > 64) & (key < 91)) {
+                if (guessLength < 5) {
+                    let currentGuess[guessLength] = key;
+                    do putLetterInCell(currentRow, guessLength, key);
+                    let guessLength = guessLength + 1;
+                } else {
+                    do clearStatusLine();
+                    do Output.printString("Already 5 letters");
+                }
+            }
+
+            // If all 6 rows used up, end the game
+            if (currentRow = 6) {
+                do clearStatusLine();
+                do Output.printString("Word was: ");
+                let i = 0;
+                while (i < 5) {
+                    do Output.printChar(target[i]);
+                    let i = i + 1;
+                }
+            }
+        }
+
+        return;
+    }
+
+    // garbage collection 
+    method void dispose() {
+        var int  i;
+        var Array w;
+
+        let i = 0;
+        while (i < wordCount) {
+            let w = wordBank[i];
+            do w.dispose();
+            let i = i + 1;
+        }
+        do wordBank.dispose();
+        do currentGuess.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+}

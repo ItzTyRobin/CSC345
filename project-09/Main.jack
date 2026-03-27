@@ -1,0 +1,11 @@
+
+
+class Main {
+    function void main() {
+        var Wordle game;
+        let game = Wordle.new();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}
