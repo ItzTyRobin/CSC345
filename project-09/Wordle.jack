@@ -215,7 +215,7 @@ class Wordle {
                 let key = Keyboard.keyPressed();
             }
             // // key debounce
-            // while (Keyboard.keyPressed() > 0) {}
+            while (Keyboard.keyPressed() > 0) {}
 
             // backspace
             if (key = 129) {
@@ -238,11 +238,12 @@ class Wordle {
             }
 
             // a-z
-            if ((key > 64) & (key < 91)) {
+            if (((key > 64) & (key < 91)) or ((key > 95) & (123))) {
                 if (guessLength < 5) {
                     let currentGuess[guessLength] = key;
                     do putLetterInCell(currentRow, guessLength, key);
                     let guessLength = guessLength + 1;
+                   // do Output.printChar(key); 
                 } else {
                     do clearStatusLine();
                     do Output.printString("Already 5 letters");
