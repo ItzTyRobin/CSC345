@@ -1,3 +1,99 @@
 class Board {
 
+    field int gridLength;
+    field int gridHeight;
+    field int cell;
+    field int gap;
+
+    constructor Board new() {
+        let gridLength = 172;
+        let gridHeight = 16;
+        let cell = 28;
+        let gap = 32;
+
+        do Screen.clearScreen();
+        do drawGrid();
+        do printTitle();
+
+        return this;
+    }
+
+    method void drawGrid() {
+        var int row;
+        var int col;
+        var int x;
+        var int y;
+
+        let row = 0;
+        while (row < 6) {
+            let col = 0;
+            while (col < 5) {
+                let x = gridLength+(col*gap);
+                let y = gridHeight+(row*gap);
+                do drawCell(x, y, false);
+                let col = col+1;
+            }
+            let row = row+1;
+        }
+        return;
+    }
+    
+    method void drawCell(int x, int y, boolean filled) {
+        do Screen.setColor(true);
+        do Screen.drawLine(x, y, x+cell, y);
+        do Screen.drawLine(x+cell, y, x+cell, y+cell);
+        do Screen.drawLine(x, y+cell, x+cell, y+cell);
+        do Screen.drawLine(x, y, x, y+cell);
+
+        if (filled) {
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x+1, y+1, x+cell-1, y+cell-1);
+        } else {
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x+1, y+1, x+cell-1, y+cell-1);
+        }
+        return;
+    }
+
+    method void putLetterInCell(int row, int col, int letter) {
+        var int cx;
+        var int cy;
+        let cx = (gridLength+(col*gap)+(cell/2))/8;
+        let cy = (gridHeight+(row*gap)+(cell/2))/11;
+        do Output.moveCursor(cy, cx);
+        do Output.printChar(letter);
+        return;
+    }
+
+    method void clearCell(int row, int col) {
+        var int x;
+        var int y;
+        let x = gridLength+(col*gap);
+        let y = gridHeight+(row*gap);
+        do drawCell(x, y, false);
+        return;
+    }
+
+    method void printTitle() {
+        do Output.moveCursor(0, 29);
+        do Output.printString("WORDLE");
+        return;
+    }
+
+    method void clearStatusLine() {
+        var int i;
+        do Output.moveCursor(22, 0);
+        let i = 0;
+        while (i < 40) {
+            do Output.printChar(32);
+            let i = i+1;
+        }
+        do Output.moveCursor(22, 0);
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
 }

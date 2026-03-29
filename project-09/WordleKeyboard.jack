@@ -1,0 +1,53 @@
+class WordleKeyboard {
+
+    field int temp;  // needed so Memory.alloc has something to allocate
+
+    constructor WordleKeyboard new() {
+        let temp = 0;
+        return this;
+    }
+
+    method char getKey() {
+        var char key;
+
+        // wait for a key to be pressed
+        let key = Keyboard.keyPressed();
+        while (key = 0) {
+            let key = Keyboard.keyPressed();
+        }
+
+        // wait for key release (debounce)
+        // without this, it fills all cells with the first key pressed, with this, 
+        // it just records once the key is pressed and waits for naother key 
+        while (Keyboard.keyPressed() > 0) {}
+
+        // only return keys we care about 
+        // enter 
+        if (key = 128) { 
+            return key; 
+        }  
+
+        // backspace
+        if (key = 129) { 
+            return key; 
+        } 
+
+        // lowercase a-z (97-122)
+        if ((key > 96) & (key < 123)) { 
+            return key; 
+        }
+
+        // uppercase A-Z (65-90)
+        if ((key > 64) & (key < 91)) {
+            return key; 
+        }
+
+        // anything else, ignore, return 0
+        return 0;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+}

@@ -1,0 +1,89 @@
+function WordleKeyboard.new 0
+    push constant 1
+    call Memory.alloc 1
+    pop pointer 0
+    push constant 0
+    pop this 0
+    push pointer 0
+    return
+function WordleKeyboard.getKey 1
+    push argument 0
+    pop pointer 0
+    call Keyboard.keyPressed 0
+    pop local 0
+label WordleKeyboard_0
+    push local 0
+    push constant 0
+    eq
+    not
+    if-goto WordleKeyboard_1
+    call Keyboard.keyPressed 0
+    pop local 0
+    goto WordleKeyboard_0
+label WordleKeyboard_1
+label WordleKeyboard_2
+    call Keyboard.keyPressed 0
+    push constant 0
+    gt
+    not
+    if-goto WordleKeyboard_3
+    goto WordleKeyboard_2
+label WordleKeyboard_3
+    push local 0
+    push constant 128
+    eq
+    not
+    if-goto WordleKeyboard_5
+    push local 0
+    return
+    goto WordleKeyboard_4
+label WordleKeyboard_5
+label WordleKeyboard_4
+    push local 0
+    push constant 129
+    eq
+    not
+    if-goto WordleKeyboard_7
+    push local 0
+    return
+    goto WordleKeyboard_6
+label WordleKeyboard_7
+label WordleKeyboard_6
+    push local 0
+    push constant 96
+    gt
+    push local 0
+    push constant 123
+    lt
+    and
+    not
+    if-goto WordleKeyboard_9
+    push local 0
+    return
+    goto WordleKeyboard_8
+label WordleKeyboard_9
+label WordleKeyboard_8
+    push local 0
+    push constant 64
+    gt
+    push local 0
+    push constant 91
+    lt
+    and
+    not
+    if-goto WordleKeyboard_11
+    push local 0
+    return
+    goto WordleKeyboard_10
+label WordleKeyboard_11
+label WordleKeyboard_10
+    push constant 0
+    return
+function WordleKeyboard.dispose 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
