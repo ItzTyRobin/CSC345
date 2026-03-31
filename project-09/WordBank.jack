@@ -53,7 +53,7 @@ class WordBank {
     }
 
     method Array pickWord() {
-        return getWord(2);
+        return getWord(2); // TODO 
     }
 
     method Array getWord(int index) {

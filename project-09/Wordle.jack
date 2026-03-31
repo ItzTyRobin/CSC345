@@ -21,7 +21,7 @@ class Wordle {
         let board = Board.new(); 
         let keyBoard = WordleKeyboard.new(); 
         
-        let target = wordBank.pickWord();
+        let target = wordBank.pickWord(); // TODO 
 
         do board.clearStatusLine();
 
