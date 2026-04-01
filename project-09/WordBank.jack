@@ -2,11 +2,13 @@ class WordBank {
 
     field Array words;
     field int   count;
+    field int seed;
 
-    constructor WordBank new() {
+    constructor WordBank new(int startSeed) {
         var Array w;
 
         let count = 8;
+        let seed = startSeed;
         let words = Array.new(count);
 
         // brick
@@ -52,9 +54,18 @@ class WordBank {
         return this;
     }
 
-    method Array pickWord() {
-        return getWord(2); // TODO 
+
+    method int wrapIndex(int value) {
+        while ((value > count) | (value = count)) {
+            let value = value - count;
+        }
+        return value;
     }
+
+    method Array pickWord() {
+    let seed = wrapIndex(seed + 1);
+    return getWord(seed);
+}
 
     method Array getWord(int index) {
         return words[index];

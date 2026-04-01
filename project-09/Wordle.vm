@@ -1,4 +1,4 @@
-function Wordle.new 0
+function Wordle.new 1
     push constant 7
     call Memory.alloc 1
     pop pointer 0
@@ -9,12 +9,86 @@ function Wordle.new 0
     pop this 1
     push constant 0
     pop this 2
-    call WordBank.new 0
-    pop this 6
     call Board.new 0
     pop this 4
     call WordleKeyboard.new 0
     pop this 5
+    push constant 0
+    pop local 0
+    push this 4
+    call Board.clearStatusLine 1
+    pop temp 0
+    push constant 22
+    call String.new 1
+    push constant 80
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 110
+    call String.appendChar 2
+    push constant 121
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 107
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 121
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+label Wordle_0
+    call Keyboard.keyPressed 0
+    push constant 0
+    eq
+    not
+    if-goto Wordle_1
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Wordle_0
+label Wordle_1
+label Wordle_2
+    call Keyboard.keyPressed 0
+    push constant 0
+    gt
+    not
+    if-goto Wordle_3
+    goto Wordle_2
+label Wordle_3
+    push local 0
+    call WordBank.new 1
+    pop this 6
     push this 6
     call WordBank.pickWord 1
     pop this 3
@@ -26,35 +100,35 @@ function Wordle.new 0
 function Wordle.run 2
     push argument 0
     pop pointer 0
-label Wordle_0
+label Wordle_4
     push this 2
     push constant 6
     lt
     not
-    if-goto Wordle_1
+    if-goto Wordle_5
     push this 5
     call WordleKeyboard.getKey 1
     pop local 0
-label Wordle_2
+label Wordle_6
     push local 0
     push constant 0
     eq
     not
-    if-goto Wordle_3
+    if-goto Wordle_7
     call Keyboard.keyPressed 0
     pop local 0
-    goto Wordle_2
-label Wordle_3
+    goto Wordle_6
+label Wordle_7
     push local 0
     push constant 129
     eq
     not
-    if-goto Wordle_5
+    if-goto Wordle_9
     push this 1
     push constant 0
     gt
     not
-    if-goto Wordle_7
+    if-goto Wordle_11
     push this 1
     push constant 1
     sub
@@ -67,22 +141,22 @@ label Wordle_3
     push this 4
     call Board.clearStatusLine 1
     pop temp 0
-    goto Wordle_6
-label Wordle_7
-label Wordle_6
-    goto Wordle_4
-label Wordle_5
-label Wordle_4
+    goto Wordle_10
+label Wordle_11
+label Wordle_10
+    goto Wordle_8
+label Wordle_9
+label Wordle_8
     push local 0
     push constant 128
     eq
     not
-    if-goto Wordle_9
+    if-goto Wordle_13
     push this 1
     push constant 5
     eq
     not
-    if-goto Wordle_11
+    if-goto Wordle_15
     push pointer 0
     push this 2
     call Wordle.showRowFeedback 2
@@ -90,20 +164,20 @@ label Wordle_4
     push pointer 0
     call Wordle.isWordCorrect 1
     not
-    if-goto Wordle_13
+    if-goto Wordle_17
     push constant 6
     pop this 2
-    goto Wordle_12
-label Wordle_13
+    goto Wordle_16
+label Wordle_17
     push this 2
     push constant 1
     add
     pop this 2
-label Wordle_12
+label Wordle_16
     push constant 0
     pop this 1
-    goto Wordle_10
-label Wordle_11
+    goto Wordle_14
+label Wordle_15
     push this 4
     call Board.clearStatusLine 1
     pop temp 0
@@ -139,94 +213,15 @@ label Wordle_11
     call String.appendChar 2
     call Output.printString 1
     pop temp 0
-label Wordle_10
-    goto Wordle_8
-label Wordle_9
-label Wordle_8
+label Wordle_14
+    goto Wordle_12
+label Wordle_13
+label Wordle_12
     push local 0
     push constant 96
     gt
     push local 0
     push constant 123
-    lt
-    and
-    not
-    if-goto Wordle_15
-    push this 1
-    push constant 5
-    lt
-    not
-    if-goto Wordle_17
-    push this 1
-    push this 0
-    add
-    push local 0
-    pop temp 0
-    pop pointer 1
-    push temp 0
-    pop that 0
-    push this 4
-    push this 2
-    push this 1
-    push local 0
-    call Board.putLetterInCell 4
-    pop temp 0
-    push this 1
-    push constant 1
-    add
-    pop this 1
-    goto Wordle_16
-label Wordle_17
-    push this 4
-    call Board.clearStatusLine 1
-    pop temp 0
-    push constant 17
-    call String.new 1
-    push constant 65
-    call String.appendChar 2
-    push constant 108
-    call String.appendChar 2
-    push constant 114
-    call String.appendChar 2
-    push constant 101
-    call String.appendChar 2
-    push constant 97
-    call String.appendChar 2
-    push constant 100
-    call String.appendChar 2
-    push constant 121
-    call String.appendChar 2
-    push constant 32
-    call String.appendChar 2
-    push constant 53
-    call String.appendChar 2
-    push constant 32
-    call String.appendChar 2
-    push constant 108
-    call String.appendChar 2
-    push constant 101
-    call String.appendChar 2
-    push constant 116
-    call String.appendChar 2
-    push constant 116
-    call String.appendChar 2
-    push constant 101
-    call String.appendChar 2
-    push constant 114
-    call String.appendChar 2
-    push constant 115
-    call String.appendChar 2
-    call Output.printString 1
-    pop temp 0
-label Wordle_16
-    goto Wordle_14
-label Wordle_15
-label Wordle_14
-    push local 0
-    push constant 64
-    gt
-    push local 0
-    push constant 91
     lt
     and
     not
@@ -301,11 +296,90 @@ label Wordle_20
     goto Wordle_18
 label Wordle_19
 label Wordle_18
+    push local 0
+    push constant 64
+    gt
+    push local 0
+    push constant 91
+    lt
+    and
+    not
+    if-goto Wordle_23
+    push this 1
+    push constant 5
+    lt
+    not
+    if-goto Wordle_25
+    push this 1
+    push this 0
+    add
+    push local 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push this 4
+    push this 2
+    push this 1
+    push local 0
+    call Board.putLetterInCell 4
+    pop temp 0
+    push this 1
+    push constant 1
+    add
+    pop this 1
+    goto Wordle_24
+label Wordle_25
+    push this 4
+    call Board.clearStatusLine 1
+    pop temp 0
+    push constant 17
+    call String.new 1
+    push constant 65
+    call String.appendChar 2
+    push constant 108
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 100
+    call String.appendChar 2
+    push constant 121
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 53
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 108
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 116
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 115
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+label Wordle_24
+    goto Wordle_22
+label Wordle_23
+label Wordle_22
     push this 2
     push constant 6
     eq
     not
-    if-goto Wordle_23
+    if-goto Wordle_27
     push this 4
     call Board.clearStatusLine 1
     pop temp 0
@@ -335,12 +409,12 @@ label Wordle_18
     pop temp 0
     push constant 0
     pop local 1
-label Wordle_24
+label Wordle_28
     push local 1
     push constant 5
     lt
     not
-    if-goto Wordle_25
+    if-goto Wordle_29
     push local 1
     push this 3
     add
@@ -352,13 +426,13 @@ label Wordle_24
     push constant 1
     add
     pop local 1
-    goto Wordle_24
-label Wordle_25
-    goto Wordle_22
-label Wordle_23
-label Wordle_22
-    goto Wordle_0
-label Wordle_1
+    goto Wordle_28
+label Wordle_29
+    goto Wordle_26
+label Wordle_27
+label Wordle_26
+    goto Wordle_4
+label Wordle_5
     push constant 0
     return
 function Wordle.toLower 0
@@ -372,14 +446,14 @@ function Wordle.toLower 0
     lt
     and
     not
-    if-goto Wordle_27
+    if-goto Wordle_31
     push argument 1
     push constant 32
     add
     return
-    goto Wordle_26
-label Wordle_27
-label Wordle_26
+    goto Wordle_30
+label Wordle_31
+label Wordle_30
     push argument 1
     return
 function Wordle.isWordCorrect 1
@@ -387,29 +461,29 @@ function Wordle.isWordCorrect 1
     pop pointer 0
     push constant 0
     pop local 0
-label Wordle_28
+label Wordle_32
     push local 0
     push constant 5
     lt
     not
-    if-goto Wordle_29
+    if-goto Wordle_33
     push pointer 0
     push local 0
     call Wordle.isCorrectPosition 2
     not
     not
-    if-goto Wordle_31
+    if-goto Wordle_35
     push constant 0
     return
-    goto Wordle_30
-label Wordle_31
-label Wordle_30
+    goto Wordle_34
+label Wordle_35
+label Wordle_34
     push local 0
     push constant 1
     add
     pop local 0
-    goto Wordle_28
-label Wordle_29
+    goto Wordle_32
+label Wordle_33
     push constant 1
     neg
     return
@@ -432,13 +506,13 @@ function Wordle.isCorrectPosition 0
     call Wordle.toLower 2
     eq
     not
-    if-goto Wordle_33
+    if-goto Wordle_37
     push constant 1
     neg
     return
-    goto Wordle_32
-label Wordle_33
-label Wordle_32
+    goto Wordle_36
+label Wordle_37
+label Wordle_36
     push constant 0
     return
 function Wordle.isInWordWrongPosition 2
@@ -454,12 +528,12 @@ function Wordle.isInWordWrongPosition 2
     pop local 1
     push constant 0
     pop local 0
-label Wordle_34
+label Wordle_38
     push local 0
     push constant 5
     lt
     not
-    if-goto Wordle_35
+    if-goto Wordle_39
     push pointer 0
     push local 0
     push this 3
@@ -475,19 +549,19 @@ label Wordle_34
     not
     and
     not
-    if-goto Wordle_37
+    if-goto Wordle_41
     push constant 1
     neg
     return
-    goto Wordle_36
-label Wordle_37
-label Wordle_36
+    goto Wordle_40
+label Wordle_41
+label Wordle_40
     push local 0
     push constant 1
     add
     pop local 0
-    goto Wordle_34
-label Wordle_35
+    goto Wordle_38
+label Wordle_39
     push constant 0
     return
 function Wordle.displayFeedback 1
@@ -497,24 +571,24 @@ function Wordle.displayFeedback 1
     push argument 2
     call Wordle.isCorrectPosition 2
     not
-    if-goto Wordle_39
+    if-goto Wordle_43
     push constant 86
     pop local 0
-    goto Wordle_38
-label Wordle_39
+    goto Wordle_42
+label Wordle_43
     push pointer 0
     push argument 2
     call Wordle.isInWordWrongPosition 2
     not
-    if-goto Wordle_41
+    if-goto Wordle_45
     push constant 63
     pop local 0
-    goto Wordle_40
-label Wordle_41
+    goto Wordle_44
+label Wordle_45
     push constant 88
     pop local 0
-label Wordle_40
-label Wordle_38
+label Wordle_44
+label Wordle_42
     push constant 22
     push argument 2
     push constant 10
@@ -562,12 +636,12 @@ function Wordle.showRowFeedback 1
     pop temp 0
     push constant 0
     pop local 0
-label Wordle_42
+label Wordle_46
     push local 0
     push constant 5
     lt
     not
-    if-goto Wordle_43
+    if-goto Wordle_47
     push pointer 0
     push argument 1
     push local 0
@@ -577,8 +651,8 @@ label Wordle_42
     push constant 1
     add
     pop local 0
-    goto Wordle_42
-label Wordle_43
+    goto Wordle_46
+label Wordle_47
     push constant 0
     return
 function Wordle.dispose 0

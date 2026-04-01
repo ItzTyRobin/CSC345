@@ -12,21 +12,33 @@ class Wordle {
     field WordBank wordBank; 
 
     constructor Wordle new() {
+    var int startSeed;
 
-        let currentGuess = Array.new(5);
-        let guessLength = 0;
-        let currentRow = 0;
+    let currentGuess = Array.new(5);
+    let guessLength = 0;
+    let currentRow = 0;
 
-        let wordBank = WordBank.new(); 
-        let board = Board.new(); 
-        let keyBoard = WordleKeyboard.new(); 
-        
-        let target = wordBank.pickWord(); // TODO 
+    let board = Board.new();
+    let keyBoard = WordleKeyboard.new();
 
-        do board.clearStatusLine();
+    let startSeed = 0;
+    do board.clearStatusLine();
+    do Output.printString("Press any key to start");
 
-        return this;
+    while (Keyboard.keyPressed() = 0) {
+        let startSeed = startSeed + 1;
     }
+
+    while (Keyboard.keyPressed() > 0) {
+    }
+
+    let wordBank = WordBank.new(startSeed);
+    let target = wordBank.pickWord();
+
+    do board.clearStatusLine();
+
+    return this;
+}
 
     method void run() {
         var char key;
