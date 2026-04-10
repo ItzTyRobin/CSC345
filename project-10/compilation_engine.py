@@ -236,18 +236,79 @@ class CompilationEngine:
     def _expr(self, parent: Element):
         e = SubElement(parent, "expression")
         
-        # not a full parser, just enough to get the right tokens in the right places
-        while self.cur() and self.cur().value not in [';', ')', ',', ']', '}']:
-            if self.cur().value not in ['{', '(', '[']:
-                self.add_tok(e, self.adv())
-            else:
-                break
-    
-    def _call(self, parent: Element):
-        e = SubElement(parent, "subroutineCall")
+        self._term(e)
         
-        while self.cur() and self.cur().value != ';':
+        while self.cur() and self.cur().value in ['+', '-', '*', '/', '&', '|', '<', '>', '=']:
             self.add_tok(e, self.adv())
+            self._term(e)
+    
+    def _term(self, parent: Element):
+        e = SubElement(parent, "term")
+        tok = self.cur()
+
+        if not tok:
+            raise SyntaxError("unexpected EOF in term")
+
+        if tok.type in [TokenType.INT_CONST, TokenType.STRING_CONST]:
+            self.add_tok(e, self.adv())
+            return
+
+        if tok.type == TokenType.KEYWORD and tok.value in ['true', 'false', 'null', 'this']:
+            self.add_tok(e, self.adv())
+            return
+
+        if tok.type == TokenType.SYMBOL and tok.value in ['-', '~']:
+            self.add_tok(e, self.adv())
+            self._term(e)
+            return
+
+        if tok.type == TokenType.SYMBOL and tok.value == '(':
+            self.eat_add(e, '(')
+            self._expr(e)
+            self.eat_add(e, ')')
+            return
+
+        if tok.type == TokenType.IDENTIFIER:
+            nxt = self.toks[self.i + 1] if self.i + 1 < len(self.toks) else None
+
+            if nxt and nxt.value == '[':
+                self.add_tok(e, self.adv())
+                self.eat_add(e, '[')
+                self._expr(e)
+                self.eat_add(e, ']')
+                return
+
+            if nxt and nxt.value in ['(', '.']:
+                self._call(e)
+                return
+
+            self.add_tok(e, self.adv())
+            return
+        
+        raise SyntaxError(f"invalid term: {tok.value}")
+
+    def _expr_list(self, parent: Element):
+        e = SubElement(parent, "expressionList")
+
+        if self.cur() and self.cur().value == ')':
+            return
+
+        self._expr(e)
+
+        while self.cur() and self.cur().value == ',':
+            self.add_tok(e, self.adv())
+            self._expr(e)
+
+    def _call(self, parent: Element):
+        self.add_tok(parent, self.adv())
+
+        if self.cur() and self.cur().value == '.':
+            self.add_tok(parent, self.adv())
+            self.add_tok(parent, self.adv())
+
+        self.eat_add(parent, '(')
+        self._expr_list(parent)
+        self.eat_add(parent, ')')
     
     def to_xml(self) -> str:
         # make it readable 
