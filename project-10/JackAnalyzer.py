@@ -1,5 +1,5 @@
 """
-Basically takes .jack files and turns them into tokenized XML
+Basically takes .jack files and turns them into tokenized XML and parse tree XML
 """
 
 import os
@@ -7,19 +7,20 @@ import sys
 from pathlib import Path
 
 from tokenizer import Tokenizer, TokenType
+from compilation_engine import CompilationEngine
 
 
 def get_output_filename(jack_file_path):
     """
-    Converts Xxx.jack → XxxT.xml
+    Converts Xxx.jack → (XxxT.xml, Xxx.xml)
     """
     base_name = os.path.splitext(jack_file_path)[0]
-    return f"{base_name}T.xml"
+    return f"{base_name}T.xml", f"{base_name}.xml"
 
 
-def tokenize_file(jack_file_path, output_file_path):
+def tokenize_file(jack_file_path, output_token_file):
     """
-    Tokenize a single file and write the results as XML
+    Tokenize a single file and write the tokenized XML output
     """
     try:
         # read the source file
@@ -30,8 +31,8 @@ def tokenize_file(jack_file_path, output_file_path):
         tokenizer = Tokenizer(source_code)
         tokens = tokenizer.get_tokens()
 
-        # write XML output
-        with open(output_file_path, 'w') as f:
+        # write tokenized XML output
+        with open(output_token_file, 'w') as f:
             f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
             f.write('<tokens>\n')
 
@@ -49,25 +50,52 @@ def tokenize_file(jack_file_path, output_file_path):
 
             f.write('</tokens>\n')
 
-        return True, len(tokens), None
+        return True, tokens, None
 
     except Exception as e:
-        return False, 0, str(e)
+        return False, [], str(e)
+
+
+def compile_file(jack_file_path, output_parse_file, tokens):
+    """
+    Compile a single file to generate parse tree XML
+    """
+    try:
+        # compile using the tokens
+        engine = CompilationEngine(tokens)
+        parse_tree = engine.compile_class()
+        
+        # write parse tree XML output
+        xml_output = engine.to_xml()
+        with open(output_parse_file, 'w') as f:
+            f.write(xml_output)
+        
+        return True, None
+    
+    except Exception as e:
+        return False, str(e)
 
 
 def process_jack_file(jack_file_path):
     """
-    Handles one .jack file
+    Handles one .jack file - tokenizes and compiles
     """
-    output_file_path = get_output_filename(jack_file_path)
-    success, token_count, error = tokenize_file(jack_file_path, output_file_path)
-
-    if success:
-        print(f"✓ {os.path.basename(jack_file_path):<25} → {output_file_path}")
-        return True, token_count
-    else:
+    token_file, parse_file = get_output_filename(jack_file_path)
+    
+    # Tokenize
+    success, tokens, error = tokenize_file(jack_file_path, token_file)
+    if not success:
         print(f"✗ {os.path.basename(jack_file_path):<25} → ERROR: {error}")
         return False, 0
+    
+    # Compile
+    success, error = compile_file(jack_file_path, parse_file, tokens)
+    if not success:
+        print(f"✗ {os.path.basename(jack_file_path):<25} → Compile ERROR: {error}")
+        return False, len(tokens)
+    
+    print(f"✓ {os.path.basename(jack_file_path):<25} → {token_file}, {parse_file}")
+    return True, len(tokens)
 
 
 def process_folder(folder_path):
@@ -117,7 +145,7 @@ def main():
         print("    - a folder with .jack files")
         print("")
         print("Output:")
-        print("  generates a corresponding XxxT.xml file for each input")
+        print("  generates XxxT.xml (tokenized) and Xxx.xml (parse tree) for each input")
         sys.exit(1)
 
     source = sys.argv[1]
@@ -129,7 +157,7 @@ def main():
             sys.exit(1)
 
         print("=" * 70)
-        print("JACK ANALYZER - TOKENIZER")
+        print("JACK ANALYZER - TOKENIZER & COMPILER")
         print("=" * 70)
         print(f"Processing file: {source}")
         print("-" * 70)
@@ -147,7 +175,7 @@ def main():
             sys.exit(1)
 
         print("=" * 70)
-        print("JACK ANALYZER - TOKENIZER")
+        print("JACK ANALYZER - TOKENIZER & COMPILER")
         print("=" * 70)
 
         success = process_folder(source)
