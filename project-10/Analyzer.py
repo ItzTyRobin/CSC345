@@ -44,7 +44,11 @@ if __name__ == '__main__':
                 if t.type == tokenType.KEYWORD:
                     tokenOutput.write('<keyword> ' + t.value + ' </keyword>\n')
                 elif t.type == tokenType.SYMBOL:
-                    tokenOutput.write('<symbol> ' + t.value + ' </symbol>\n')
+                    value = t.value
+                    value = value.replace('&', '&amp;')
+                    value = value.replace('<', '&lt;')
+                    value = value.replace('>', '&gt;')
+                    tokenOutput.write('<symbol> ' + value + ' </symbol>\n')
                 elif t.type == tokenType.IDENTIFIER:
                     tokenOutput.write('<identifier> ' + t.value + ' </identifier>\n')
                 elif t.type == tokenType.INT_CONST:

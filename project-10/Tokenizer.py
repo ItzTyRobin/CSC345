@@ -16,7 +16,7 @@ class tokenType:
         if t in ['class', 'method', 'function', 'constructor', 'int', 'boolean', 'char', 'void', 'var', 'static', 'field',
                  'let', 'do', 'if', 'else', 'while', 'return', 'true', 'false', 'null', 'this']:
             return tokenType.KEYWORD
-        elif t in ['{', '}', '(', ')', '[', ']', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~']:
+        elif t in ['{', '}', '(', ')', '[', ']', '.', ',', ';', '+', '-', '*', '/', '&', '|', '<', '>', '=', '~', '"']:
             return tokenType.SYMBOL
         elif t.isdigit():
             return tokenType.INT_CONST
@@ -34,6 +34,7 @@ class token:
 takes in jack source code and breaks it into tokens
 """
 class tokenizer:
+    
     def init (self, input):
         self.input = input
         self.tokens = []
@@ -103,7 +104,8 @@ class tokenizer:
         return token(tokenType.STRING_CONST, string)
     
     def hasMoreTokens(self):
-        return self.currentTokenIndex < len(self.tokens)
+        return self.currentTokenIndex < len(self.tokens) - 1 ### !!!!!!!
+        #### did not have the -1 here before, which caused it to skip the last token in the list.
     
     def advance(self):
         if self.hasMoreTokens():

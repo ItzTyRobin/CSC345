@@ -14,6 +14,7 @@ class Compilation:
 
     def writeSymbol(self, value):
         escaped = self.escapesXML.get(value, value)
+        
         self.outputFile.write('<symbol> ' + escaped + ' </symbol>\n')
 
     def compileClass(self):
@@ -326,7 +327,7 @@ class Compilation:
         # compile term
         self.compileTerm()
         # write (op term)* 
-        while self.tokenizer.currentToken.value in ['+', '-', '*', '/', '&', '|', '<', '>', '=']:
+        while self.tokenizer.currentToken.value in ['+', '-', '*', '/', '&', '|', '<', '>', '=', '"', '~']:
             self.writeSymbol(self.tokenizer.currentToken.value)
             self.tokenizer.advance()
             self.compileTerm()
