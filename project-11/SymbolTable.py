@@ -1,10 +1,15 @@
 class SymbolTable: 
     subroutineCount = 0
     classCount = 0
+    table = {}
+    
+    # when labeled function, self cotained subroutine 
+    # only count extra parameter when its a method 
+    # 
     
     # need two seperate symbol tables, so 
     # we make each one its own dictionary 
-    def symbolTable():
+    def __intit__():
         table = {
             "classTable": {},  # static and field variables
             "subroutineTable": {}  # argument and local variables
@@ -15,14 +20,11 @@ class SymbolTable:
         }
         return table
     
-    # a new subroutine means we should reset the whole subroutine table 
     def resetSubroutine(table):
         table.subroutineTable = {}
     
-    # a new class, means we should reset both tables. 
     def resetClass(table): 
         table.classTable = {}
-        table.resetSubroutine(table.subroutineTable)
         
     # Defines (adds to table) a new variable of teh given name, type, and kind
     # Assigns to it the index value of that kind, 
@@ -48,7 +50,38 @@ class SymbolTable:
                 if symbol[1] == kind: 
                     count += 1 
         return count 
+    
+    # returns the kind of the named identifier 
+    # if the identifier is not found, returns NONE 
+    def kindOf(symbol): 
+        for sym in symbol.table.classTable.keys(): 
+            if sym == symbol: 
+                return sym.values[1]
+        
+        for sym in symbol.table.subroutineTable.keys(): 
+            if sym == symbol: 
+                return sym.values[1]
             
-    # kindOf
-    # typeOf 
-    # indexOf  
+    # return sthe type of the named variable
+    def typeOf(symbol): 
+        for sym in symbol.table.classTable.keys(): 
+            if sym == symbol: 
+                return sym.values[0]
+        
+        for sym in symbol.table.subroutineTable.keys(): 
+            if sym == symbol: 
+                return sym.values[0]
+    
+    # returns the index of the named variable
+    def indexOf(symbol): 
+        count = 0 
+        for sym in symbol.table.classTable.keys(): 
+            count += 1 
+            if sym == symbol: 
+                return count
+    
+        count = 0 
+        for sym in symbol.table.subroutineTable.keys(): 
+            count += 1 
+            if sym == symbol: 
+                return count 
