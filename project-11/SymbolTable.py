@@ -22,7 +22,7 @@ class SymbolTable:
     # a new class, means we should reset both tables. 
     def resetClass(table): 
         table.classTable = {}
-        resetSubroutine(table.subroutineTable)
+        table.resetSubroutine(table.subroutineTable)
         
     # Defines (adds to table) a new variable of teh given name, type, and kind
     # Assigns to it the index value of that kind, 
