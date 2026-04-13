@@ -1,9 +1,9 @@
 class SymbolTable: 
+    subroutineCount = 0
+    classCount = 0
     
     # need two seperate symbol tables, so 
     # we make each one its own dictionary 
-    
-    # a new class, means we should reset both tables. 
     def symbolTable():
         table = {
             "classTable": {},  # static and field variables
@@ -17,18 +17,27 @@ class SymbolTable:
     
     # a new subroutine means we should reset the whole subroutine table 
     def resetSubroutine(table):
-        table.subroutine = {}
+        table.subroutineTable = {}
+    
+    # a new class, means we should reset both tables. 
+    def resetClass(table): 
+        table.classTable = {}
+        resetSubroutine(table.subroutineTable)
         
-    def enterIntoData(table, name, type, kind):
+    # Defines (adds to table) a new variable of teh given name, type, and kind
+    # Assigns to it the index value of that kind, 
+    # and adds 1 to the index
+    def define(table, name, type, kind):
         if kind in ("static", "field"):
-            index = table.countVariables(kind)
-            table.classTable[name] = (type, kind, index)
+            table.classTable[name] = (type, kind, classCount)
+            classCount += 1
         else:
-            index = table.countVariables(kind)
-            table.subroutineTable[name] = (type, kind, index)
+            table.subroutineTable[name] = (type, kind, subroutineCount)
+            subroutineCount += 1
             
-    # counts how many variables of the given kind are already defined 
-    def countVariables(table, kind): 
+    # returns the number of variables of the given 
+    # kind already defined in the table 
+    def varCount(table, kind): 
         count = 0 
         if kind in ("static", "field"): 
             for symbol in table.classTable.values(): 
@@ -38,9 +47,8 @@ class SymbolTable:
             for symbol in table.subroutineTable.values(): 
                 if symbol[1] == kind: 
                     count += 1 
+        return count 
             
-            
-    # lookup method that finds which table a name lives in 
-    # check subroutine first, then class 
-    
-    # write get methods for each type, kind, and index of a symbol in the table. 
+    # kindOf
+    # typeOf 
+    # indexOf  
