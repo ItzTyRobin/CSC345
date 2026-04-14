@@ -54,34 +54,21 @@ class SymbolTable:
     # returns the kind of the named identifier 
     # if the identifier is not found, returns NONE 
     def kindOf(symbol): 
-        for sym in symbol.table.classTable.keys(): 
-            if sym == symbol: 
-                return sym.values[1]
-        
-        for sym in symbol.table.subroutineTable.keys(): 
-            if sym == symbol: 
-                return sym.values[1]
+        if symbol in symbol.table.classTable: 
+            return symbol.table.classTable[symbol][1]
+        elif symbol in symbol.table.subroutineTable: 
+            return symbol.table.subroutineTable[symbol][1]
             
-    # return sthe type of the named variable
+    # returns the type of the named variable
     def typeOf(symbol): 
-        for sym in symbol.table.classTable.keys(): 
-            if sym == symbol: 
-                return sym.values[0]
-        
-        for sym in symbol.table.subroutineTable.keys(): 
-            if sym == symbol: 
-                return sym.values[0]
+        if symbol in symbol.table.classTable: 
+            return symbol.table.classTable[symbol][0]
+        elif symbol in symbol.table.subroutineTable: 
+            return symbol.table.subroutineTable[symbol][0]
     
     # returns the index of the named variable
     def indexOf(symbol): 
-        count = 0 
-        for sym in symbol.table.classTable.keys(): 
-            count += 1 
-            if sym == symbol: 
-                return count
-    
-        count = 0 
-        for sym in symbol.table.subroutineTable.keys(): 
-            count += 1 
-            if sym == symbol: 
-                return count 
+        if symbol in symbol.table.classTable: 
+            return symbol.table.classTable[symbol][2]
+        elif symbol in symbol.table.subroutineTable: 
+            return symbol.table.subRoutine[symbol][2]
