@@ -3,6 +3,7 @@ import os
 
 from JackTokenizer import Tokenizer, tokenType
 from CompilationEngine import Compilation
+from SymbolTable import SymbolTable
 
 def fixSpecialChars(value):
     value = value.replace('&', '&amp;')
@@ -19,6 +20,7 @@ def writeTokens(tokenizer, outFile):
             outFile.write('<symbol> ' + fixSpecialChars(t.value) + ' </symbol>\n')
         elif t.type == tokenType.identifier:
             outFile.write('<identifier> ' + t.value + ' </identifier>\n')
+            # outFile.write()
         elif t.type == tokenType.intConst:
             outFile.write('<integerConstant> ' + str(t.value) + ' </integerConstant>\n')
         elif t.type == tokenType.stringConst:

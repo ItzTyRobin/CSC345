@@ -29,7 +29,6 @@
 <keyword> int </keyword>
 <identifier> i </identifier>
 <symbol> , </symbol>
-<identifier> sum </identifier>
 <symbol> ; </symbol>
 </varDec>
 <statements>

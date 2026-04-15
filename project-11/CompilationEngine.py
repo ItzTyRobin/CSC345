@@ -1,10 +1,14 @@
 from JackTokenizer import tokenType
+from SymbolTable import SymbolTable
 
 class Compilation:
+    currentValKind = "var"
+    
 
     def __init__(self, tokenizer, outputFile):
         self.tokenizer = tokenizer
         self.out = outputFile
+        self.symbolTable = SymbolTable() 
 
     def write(self, line):
         self.out.write(line + '\n')
@@ -41,27 +45,40 @@ class Compilation:
 
     def compileClassVarDec(self):
         self.write('<classVarDec>')
+        # Static or field
+        # kind = self.currentVal()
         self.write('<keyword> ' + self.currentVal() + ' </keyword>')
+        
         self.advance()
+        # Type
         if self.currentType() == tokenType.keyWord:
             self.write('<keyword> ' + self.currentVal() + ' </keyword>')
         else:
             self.write('<identifier> ' + self.currentVal() + ' </identifier>')
         self.advance()
+        # Var name
         self.write('<identifier> ' + self.currentVal() + ' </identifier>')
+        # print("HERE HERE HERE HERE!!!!!: " + self.currentVal())
+        self.symbolTable.define(self.currentVal(), self.currentType(), "var")
         self.advance()
+        # More var names
         while self.currentVal() == ',':
             self.writeSymbol(',')
             self.advance()
             self.write('<identifier> ' + self.currentVal() + ' </identifier>')
             self.advance()
+        # Semicolon
         self.writeSymbol(';')
         self.advance()
         self.write('</classVarDec>')
 
     def compileSubroutineDec(self):
         self.write('<subroutineDec>')
+        # Constructor, function, or method
         self.write('<keyword> ' + self.currentVal() + ' </keyword>')
+        currentValKind = self.currentVal()
+        # self.symbolTable.define(, self.currentType(), currentValKind)
+        # print("WHAT IS THE KIND: ", self.currentVal())
         self.advance()
         if self.currentType() == tokenType.keyWord:
             self.write('<keyword> ' + self.currentVal() + ' </keyword>')
@@ -69,6 +86,7 @@ class Compilation:
             self.write('<identifier> ' + self.currentVal() + ' </identifier>')
         self.advance()
         self.write('<identifier> ' + self.currentVal() + ' </identifier>')
+        print("current name: ", self.currentVal())
         self.advance()
         self.writeSymbol('(')
         self.advance()
@@ -76,6 +94,7 @@ class Compilation:
         self.writeSymbol(')')
         self.advance()
         self.compileSubroutineBody()
+        
         self.write('</subroutineDec>')
 
     def compileParameterList(self):
@@ -124,8 +143,9 @@ class Compilation:
         self.advance()
         while self.currentVal() == ',':
             self.writeSymbol(',')
+            
             self.advance()
-            self.write('<identifier> ' + self.currentVal() + ' </identifier>')
+            # self.write(currentVal.)
             self.advance()
         self.writeSymbol(';')
         self.advance()

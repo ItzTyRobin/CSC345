@@ -87,7 +87,6 @@
 <keyword> int </keyword>
 <identifier> i </identifier>
 <symbol> , </symbol>
-<identifier> j </identifier>
 <symbol> ; </symbol>
 </varDec>
 <varDec>
